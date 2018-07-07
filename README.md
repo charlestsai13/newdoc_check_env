@@ -83,18 +83,18 @@ $min_ver = "3.0.3"
 check_newdoc_env.bat 部分則要設定共用空間的檔案 UNC 路徑(不可為 X:\ 必須為 \\\server\path\file)
 
 ```
-SET chkHicos=\\nas\p_disk\軟體分享\newdoc\checkHicos.ps1
-SET fileJavaCert=\\nas\p_disk\軟體分享\newdoc\trusted.jssecerts
-SET fileKdapp=\\nas\p_disk\軟體分享\newdoc\kdapp.jnlp
+SET chkHicos=\\nas\share\newdoc\checkHicos.ps1
+SET fileJavaCert=\\nas\share\newdoc\trusted.jssecerts
+SET fileKdapp=\\nas\share\newdoc\kdapp.jnlp
 ```
 
 ## 設置 GPO 使用登入批次檔
 
-最後就是 設置 GPO 的登入時執行的批次檔 check_newdoc_env.bat
+最後就是設置 GPO 的登入時執行的批次檔 check_newdoc_env.bat
 
 這個檔案會依序做下列的動作
 
-* 檢查 Hicos，版本小於設定版號就自動安裝最新版
+* 檢查 Hicos，版本小於設定版號 (checkHicos.ps1內設定) 就自動安裝最新版
 * 檢查 Java 例外網站設定，沒有就補
 * 檢查 Chrome 例外網站設定，沒有就補
 * 檢查是否安裝 Java 所需憑證，沒有就從設置的的共享檔案抓來裝
