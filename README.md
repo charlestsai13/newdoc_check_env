@@ -109,7 +109,8 @@ SET fileKdapp=\\nas\p_disk\軟體分享\newdoc\kdapp.jnlp
 
 這樣就完成了
 
-##測試
+## 測試
+
 立即更新群組原則 gpupdate
 
 登出 / 登入 應該就有了
