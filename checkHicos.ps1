@@ -13,7 +13,7 @@ function install_hicos{
 	(New-Object Net.WebClient).DownloadFile($hicos_url, $hicos_local) 
 
 	# unzip hicos
-	$shell_app=new-object -com shell.application
+	$shell_app = new-object -com shell.application
 	$zip_file = $shell_app.namespace(${env:Temp} + "\hicos.zip")
 	$destination = $shell_app.namespace(${env:Temp})
 	$destination.Copyhere($zip_file.items(), 0x14)
