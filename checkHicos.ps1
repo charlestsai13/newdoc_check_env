@@ -1,9 +1,22 @@
 $min_ver = "3.0.3"
-$hicos_utility = "${env:ProgramFiles(x86)}\Chunghwa Telecom\HiCOS PKI Smart Card\TokenUtility.exe"
+$dir = (${env:ProgramFiles(x86)}, ${env:ProgramFiles} -ne $null)[0]
+$hicos_utility = $dir+"\Chunghwa Telecom\HiCOS PKI Smart Card\TokenUtility.exe"
 
 function install_hicos{
-	Invoke-WebRequest -Uri http://api-hisecurecdn.cdn.hinet.net/HiCOS_Client.zip -outFile ${env:Temp}\hicos.zip
-	Expand-Archive -Force ${env:Temp}\hicos.zip -DestinationPath ${env:Temp}\
+	# Only for powershell 5+
+	# Invoke-WebRequest -Uri http://api-hisecurecdn.cdn.hinet.net/HiCOS_Client.zip -outFile ${env:Temp}\hicos.zip
+	# Expand-Archive -Force ${env:Temp}\hicos.zip -DestinationPath ${env:Temp}\
+
+	# download hicos
+	$hicos_url = "http://api-hisecurecdn.cdn.hinet.net/HiCOS_Client.zip" 
+	$hicos_local = "${env:Temp}\hicos.zip" 
+	(New-Object Net.WebClient).DownloadFile($hicos_url, $hicos_local) 
+
+	# unzip hicos
+	$shell_app=new-object -com shell.application
+	$zip_file = $shell_app.namespace(${env:Temp} + "\hicos.zip")
+	$destination = $shell_app.namespace(${env:Temp})
+	$destination.Copyhere($zip_file.items(), 0x14)
 	& ${env:Temp}\HiCOS_Client.exe
 }
 
