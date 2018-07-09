@@ -23,7 +23,6 @@ powershell.exe -noprofile -executionpolicy bypass -file %chkHicos%
 :checkJavaInit
 IF NOT EXIST %userprofile%\AppData\LocalLow\Sun "%x86dir%\Common Files\Java\Java Update\jucheck.exe"
 
-
 :checkJavaExpSites
 IF NOT EXIST %javaExpSites% fsutil file createnew %javaExpSites% 0  
 IF EXIST %javaExpSites% GOTO foundExp  
