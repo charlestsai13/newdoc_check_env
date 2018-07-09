@@ -9,7 +9,9 @@ REM ==============================================================
 SET javaExpSites=%userprofile%\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites
 SET javaCert=%userprofile%\AppData\LocalLow\Sun\Java\Deployment\security\trusted.jssecerts
 SET javaCache=%userprofile%\AppData\LocalLow\Sun\Java\Deployment\deployment.properties
-SET kdappStartup=%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\kdapp.jnlp
+SET vbsc=%TEMP%\mklnk.vbs
+SET desktopLink=%USERPROFILE%\Desktop\新公文元件.lnk
+REM SET kdappStartup=%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\kdapp.jnlp
 
 :check64
 SET x86dir=%ProgramFiles(x86)%
@@ -26,7 +28,6 @@ IF NOT EXIST %userprofile%\AppData\LocalLow\Sun "%x86dir%\Common Files\Java\Java
 :checkJavaExpSites
 IF NOT EXIST %javaExpSites% fsutil file createnew %javaExpSites% 0  
 IF EXIST %javaExpSites% GOTO foundExp  
-GOTO :CheckCert
   
 :foundExp
 FOR %%G IN (  
@@ -34,17 +35,30 @@ FOR %%G IN (
  https://doc.gov.taipei 
  https://edoc.gov.taipei 
  ) DO (CALL :checkExpLine %%G)  
-GOTO :CheckCert
+GOTO :checkCert
   
 :checkExpLine  
 find "%1" %javaExpSites% || echo %1 >> %javaExpSites%  
 GOTO :eof
  
-:CheckCert
+:checkCert
 IF NOT EXIST %javaCert% copy %fileJavaCert% %javaCert%
 
-:CheckJavaCache
+:checkJavaCache
 IF EXIST %javaCache% find "deployment.cache.enabled=true" %javaCache% || echo deployment.cache.enabled=true >> %javaCache% 
 
-:CheckKdapp
-IF NOT EXIST "%kdappStartup%" copy "%fileKdapp%" "%kdappStartup%"
+:checkLink
+IF EXIST %desktopLink% GOTO :startKdapp
+
+:makeLink
+echo Set oWS = WScript.CreateObject("WScript.Shell") >> %vbsc%
+echo sLinkFile = "%desktopLink%" >> %vbsc%
+echo Set oLink = oWS.CreateShortcut(sLinkFile) >> %vbsc%
+echo oLink.TargetPath = "%fileKdapp%" >> %vbsc%
+echo oLink.Save >> %vbsc%
+cscript /nologo %vbsc%
+del %vbsc%
+
+:startKdapp
+timeout /t 15
+javaws.exe %fileKdapp%
