@@ -11,8 +11,18 @@ SET javaCert=%userprofile%\AppData\LocalLow\Sun\Java\Deployment\security\trusted
 SET javaCache=%userprofile%\AppData\LocalLow\Sun\Java\Deployment\deployment.properties
 SET kdappStartup=%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\kdapp.jnlp
 
+:check64
+SET x86dir=%ProgramFiles(x86)%
+IF NOT "%x86dir%"=="" GOTO win64
+SET x86dir=%ProgramFiles%
+:win64
+
 :checkHicos
 powershell.exe -noprofile -executionpolicy bypass -file %chkHicos%
+
+:checkJavaInit
+IF NOT EXIST %userprofile%\AppData\LocalLow\Sun "%x86dir%\Common Files\Java\Java Update\jucheck.exe"
+
 
 :checkJavaExpSites
 IF NOT EXIST %javaExpSites% fsutil file createnew %javaExpSites% 0  
