@@ -1,8 +1,21 @@
 # 透過 AD 的群組原則處理北市學校端的新公文系統
 
-## 本文測試環境
+## 說明
 
-* Windows 10 1803 64位元企業版
+本專案部署後，群組內的使用者登入後會依序自動處理下列各項
+
+- 檢查 Hicos，版本小於設定版號 (checkHicos.ps1內設定) 就自動安裝最新版
+- 檢查 Java 例外網站設定，沒有就補
+- 檢查 Chrome 例外網站設定，沒有就補
+- 檢查是否安裝 Java 所需憑證，沒有就從設置的的共享檔案抓來裝
+- 檢查 Java 是否設置 cache 沒有就設
+- 15 秒後啟動新公文元件 (Kdapp.jnlp)
+- 檢查桌面有無 新公文元件 的捷徑，沒有就做一個
+
+## 已測試環境
+
+* Windows 10 (1803) 64 位元 企業版
+* Windows 7 SP2 32位元 專業版
 
 ## 準備
 
@@ -11,7 +24,7 @@
 * 安裝 [Chrome](https://www.google.com.tw/chrome/)
 * 安裝 [Java JRE 8](https://java.com)
 
-另外需要先準備 trusted.jssecerts、kdapp.jnlp 這兩個檔，請去公文系統提供的檔案區找。
+另外需要先準備 trusted.jssecerts、kdapp.jnlp 這兩個檔，請去 [公文系統提供的檔案區](https://sites.google.com/view/newdoc/school/%E6%AA%94%E6%A1%88%E4%B8%8B%E8%BC%89%E8%88%87%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A) 下載學校用的任一版本，只需取用前述兩個檔案即可。
 
 ## 使用 GPO 管理 Chrome
 
@@ -19,7 +32,7 @@
 
 檔案內有 adm / admx 兩種方式，要使用哪一種方式都可以
 
-* adm: 從 GPO 系統管理範本內新增，新增之後只有這個 GPO 有， 透過 RSAT 管理不須再次安裝 adm 樣板。
+* adm: 從 GPO 系統管理範本內新增，新增之後只有這個 GPO 有， 透過 [RSAT](https://support.microsoft.com/zh-tw/help/2693643/remote-server-administration-tools-rsat-for-windows-operating-systems) 管理不須再次安裝 adm 樣板。
 * admx: 要自己複製到主機 (你操作 GPO 這台) 的 %systemroot%\PolicyDefinitions , 對應語系資料夾要裝對應的語系樣板檔 adml， 所有的 GPO 都會有新選項，但是換一台操主機就沒了，除非在操作本機再安裝一次。
 
 透過 adm 會安裝在 電腦(使用者)設定 / 原則 / 系統管理範本 / 傳統系統管理範本(ADM) / Google / Google Chrome
@@ -64,9 +77,11 @@ http://scan.taipei.gov.tw
 
 找台 nas 或是共用空間放置公文系統的 trusted.jssecerts 、 kdapp.jnlp 和本專案的 checkHicos.ps1 三個檔案
 
-目的是讓下個步驟的批次檔在需要的時候可以過來抓檔
+目的是
 
-注意: 路徑不可以是連線磁碟代號，而是要 UNC 路徑 ( \\\server\path\file )
+* 批次檔在檢測環境時需要連線使用 checkHicos.ps1 檔
+* 檢測環境如沒有 JAVA 憑證檔 trusted.jssecerts 就可以過來安裝
+* 啟動公文時需要 kdapp.jnlp (本專案設置是連線啟用，使用者亦可複製一份回桌面使用)
 
 ### 設定 Script  檔內容
 
@@ -80,7 +95,9 @@ checkHicos.ps1 為 powershell 腳本，目的為確認 Hicos 版本並更新
 $min_ver = "3.0.3"
 ```
 
-check_newdoc_env.bat 部分則要設定共用空間的檔案 UNC 路徑(不可為 X:\ 必須為 \\\server\path\file)
+check_newdoc_env.bat 部分則要設定共用空間的檔案 UNC 路徑 
+
+**特別注意: 不可是連線磁碟機代號 X:\，應該是 \\\server\path\file 這種 UNC 格式**
 
 ```
 SET chkHicos=\\nas\share\newdoc\checkHicos.ps1
@@ -91,15 +108,6 @@ SET fileKdapp=\\nas\share\newdoc\kdapp.jnlp
 ## 設置 GPO 使用登入批次檔
 
 最後就是設置 GPO 的登入時執行的批次檔 check_newdoc_env.bat
-
-這個檔案會依序做下列的動作
-
-* 檢查 Hicos，版本小於設定版號 (checkHicos.ps1內設定) 就自動安裝最新版
-* 檢查 Java 例外網站設定，沒有就補
-* 檢查 Chrome 例外網站設定，沒有就補
-* 檢查是否安裝 Java 所需憑證，沒有就從設置的的共享檔案抓來裝
-* 檢查 Java 是否設置 cache 沒有就設
-* 檢查開機啟動區有沒有放 kdapp 檔，沒有就去設置的共享檔案抓來裝
 
 設置方式: 群組原則編輯 / 使用者設定 / Windows 設定 / 指令碼 -登入登出 / 登入
 
