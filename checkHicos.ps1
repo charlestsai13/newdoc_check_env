@@ -1,6 +1,6 @@
 $min_ver = "3.0.3"
 $dir = (${env:ProgramFiles(x86)}, ${env:ProgramFiles} -ne $null)[0]
-$hicos_utility = $dir+"\Chunghwa Telecom\HiCOS PKI Smart Card\TokenUtility.exe"
+$hicos_utility = $dir + "\Chunghwa Telecom\HiCOS PKI Smart Card\TokenUtility.exe"
 
 function install_hicos{
 	# Only for powershell 5+
