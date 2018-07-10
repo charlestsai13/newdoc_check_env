@@ -39,9 +39,17 @@
 
 透過 admx 的就不會多一層 "傳統系統管理範本" 了
 
+以 adm 為例是這樣安裝
+
+![adm step 1](https://i.imgur.com/mOvAXqk.png)
+
+![adm step 2](https://i.imgur.com/4whI85M.png)
+
 針對行政群組容器設置的群組原則(依人)不能用電腦的系統管理範本，要用使用者的系統管理範本
 
 以下我已使用者的範本為例
+
+![Chrome GPO](https://i.imgur.com/GZzIMbM.png)
 
 新公文系統在 Chrome GPO 上面需要做兩個設定: Flash 與 彈出視窗
 
@@ -108,6 +116,8 @@ SET fileKdapp=\\nas\share\newdoc\kdapp.jnlp
 ## 設置 GPO 使用登入批次檔
 
 最後就是設置 GPO 的登入時執行的批次檔 check_newdoc_env.bat
+
+![Logon GPO](https://i.imgur.com/Tl1LBu9.png)
 
 設置方式: 群組原則編輯 / 使用者設定 / Windows 設定 / 指令碼 -登入登出 / 登入
 
