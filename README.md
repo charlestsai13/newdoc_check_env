@@ -19,10 +19,10 @@
 
 ## 準備
 
-本文未處理的部分有兩個，請先自行安裝
+主批次檔 check_newdoc_env.bat 未處理的部分有兩個，請另行處理或事先安裝於部署的映象檔
 
-* 安裝 [Chrome](https://www.google.com.tw/chrome/)
-* 安裝 [Java JRE 8](https://java.com)
+* 安裝 [Chrome](https://www.google.com.tw/chrome/) (可參考[官方部署指南](https://support.google.com/chrome/a/answer/3115278?hl=zh-Hant))
+* 安裝 [Java JRE 8](https://java.com) (如需自動安裝 JAVA 部分請另外下載 JRE 並搭配 check_java.bat 使用 可設定最低版本與安裝檔位置進行自動升級與安裝)
 
 另外需要先準備 trusted.jssecerts、kdapp.jnlp 這兩個檔，請去 [公文系統提供的檔案區](https://sites.google.com/view/newdoc/school/%E6%AA%94%E6%A1%88%E4%B8%8B%E8%BC%89%E8%88%87%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A) 下載學校用的任一版本，只需取用前述兩個檔案即可。
 
@@ -129,6 +129,6 @@ SET fileKdapp=\\nas\share\newdoc\kdapp.jnlp
 
 ## 測試
 
-立即更新群組原則 gpupdate
+立即更新群組原則 執行 gpupdate
 
 登出 / 登入 應該就有了
