@@ -28,7 +28,7 @@
 
 ## 使用 GPO 管理 Chrome
 
-下載 chrome GPO 樣板 https://dl.google.com/dl/edgedl/chrome/policy/policy_templates.zip
+下載 Chrome GPO 樣板 https://dl.google.com/dl/edgedl/chrome/policy/policy_templates.zip
 
 檔案內有 adm / admx 兩種方式，要使用哪一種方式都可以
 
@@ -73,9 +73,11 @@ http://scan.taipei.gov.tw
 
 這部分我自己是沒有設，我內部防火牆是全部關閉，如果你有開啟可能需要設置一下
 
+但要注意一下這個設定只能針對 **電腦** 去做群組原則，無法以 **人** 去做群組原則，所以要另外設置可能不能跟上述對人的群組混用
+
 電腦設定 / Windows 設定 / 安全性設定 / 具有進階安全性的 Windows Defender 防火牆 / 輸入連線
 
-右鍵新增規則 / 程式 / C:\Program Files(x86)\java\jre1.8.0_171\bin\jp2launcher.exe / 允許連線 / 所有 / 給個名字
+右鍵新增規則 / 程式 / C:\Program Files(x86)\java\jre1.8.0_181\bin\jp2launcher.exe / 允許連線 / 所有 / 給個名字
 
 上面這個要依照版本去設定
 
@@ -125,6 +127,8 @@ SET fileKdapp=\\nas\share\newdoc\kdapp.jnlp
 
 把本專案的 check_newdoc_env.bat 丟進去，並選擇本檔案，無須參數
 
+如果要做 JAVA 自動更新的話就把 check_java.bat 也掛進來
+
 這樣就完成了
 
 ## 測試
@@ -132,3 +136,36 @@ SET fileKdapp=\\nas\share\newdoc\kdapp.jnlp
 立即更新群組原則 執行 gpupdate
 
 登出 / 登入 應該就有了
+
+## 特別注意
+
+群組原則的設定可針對 組織 (OU) 做設定，像是教務處這樣的組織設定，
+
+**但是請注意 要讓群組原則能夠生效 組織 (OU) 底下必須是使用者或是電腦**
+
+所以如果你的組織像這樣
+
+* 公文人員
+  * 處室 A
+    * 人員 P1
+    * 人員 P2
+  * 處室 B
+    * 人員 P3
+    * 人員 P4
+
+把 公文人員 做群組原則連結的話是無效的
+
+必須對 處室 A / 處室 B 這兩個都做群組原則連結才能生效
+
+又如果組織是
+
+- 行政人員
+  - 群組 G1
+  - 群組 G2
+  - 群組 G3
+- 非行政
+  - 群組  G4
+
+這種規劃也不能把群組原則放在 行政人員 上面，因為底下不是人員是群組
+
+所以你必須用上面處室 A / B 這種方式去做才行
