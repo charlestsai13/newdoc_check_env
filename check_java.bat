@@ -1,7 +1,7 @@
 @echo off
 REM 以下設定 java 最低版本 與 JRE 安裝檔位置
 SET JRE_MINI_VER=180181
-SET JRE_FILE=C:\Users\alexw\Downloads\jre-8u181-windows-x64.exe
+SET JRE_FILE=\\nas\share\newdoc\jre-8u181-windows-x64.exe
 
 PATH %PATH%
 java >NUL 2>NUL
